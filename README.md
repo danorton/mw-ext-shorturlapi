@@ -1,4 +1,6 @@
 wm-ext-shorturlapi
 ==================
 
-Wikimedia Extension ShortUrlApi - an API extension for the Wikimedia Extension ShortUrl
+Wikimedia Extension ApiShortUrl - an API extension for the Wikimedia ShortUrl extension
+
+This README is not part of the extension, but only part of the repo wrapper.
