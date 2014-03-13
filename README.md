@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html><head><meta http-equiv="Content-Type" content="text/markdown; charset=UTF-8"></head><body>
 wm-ext-shorturlapi
 ==================
 
