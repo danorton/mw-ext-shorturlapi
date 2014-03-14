@@ -94,13 +94,10 @@ class ApiShortUrl extends ApiBase {
 		// remove duplicate codes
 		$codes = array_keys( array_flip( $codes ) ) ;
 
-		// convert codes to ids
-		$codes = array_map( 'ApiShortUrl::idFromCode', $codes ) ;
-
 		// fetch from the DB and iterate over the results
 		foreach ( $this->_queryDB( $codes ) as $row ) {
 			if ( $row->page_id ) {		// only report shorturl entries that are not orphaned
-				$code = $row->su_id ;
+				$code = ApiShortUrl::codeFromId( $row->su_id ) ;
 				$shorturls["code_$code"] =
 					array(
 						'code'    => $code,
@@ -217,10 +214,16 @@ class ApiShortUrl extends ApiBase {
 	 * Query the ShortUrl database for details about specified ShortUrl codes
 	 */
 	private function _queryDB( $codes ) {
+		// convert codes to ids (this also scrubs the input)
+		$ids = array_map( 'ApiShortUrl::idFromCode', $codes ) ;
+		
+		// remove duplicate ids (e.g. can result when codes have leading zeros)
+		$ids = array_keys( array_flip( $ids ) ) ;
+
 		// build the DB query
 		$dbTables = array( 'shorturls', 'page' ) ;
 		$dbFields = array( 'su_id', 'page_id', 'page_title', 'page_namespace' ) ;
-		$dbConds  = array( 'su_id' => $codes ) ;
+		$dbConds  = array( 'su_id' => $ids ) ;
 		$dbOptions = array() ;
 		$dbJoinConds = array( 'page' => array(
 			'LEFT OUTER JOIN',
