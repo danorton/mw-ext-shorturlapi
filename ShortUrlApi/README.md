@@ -1,11 +1,12 @@
 # MediaWiki ShortUrlApi extension
 
-Copyright: © 2014 Daniel Norton
-Licenses: CC BY-SA 3.0
+© 2014 Daniel Norton
+
+CC BY-SA 3.0
 
 ---
 
-<http://danorton.github.io/wm/extensions/ShortUrlApi/dox/>
+API documentation: http://danorton.github.io/wikimedia/extensions/ShortUrlApi/dox/
 
 ## Installation
 

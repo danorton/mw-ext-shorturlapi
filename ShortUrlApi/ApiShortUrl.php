@@ -1,9 +1,22 @@
 <?php
 /**
- * @file
  * @ingroup Extensions
- * @author Daniel Norton
- * @copyright © 2014 Daniel Norton
+ * @{
+ * ApiShortUrl Class
+ *
+ * @file
+ * @{
+ * @copyright © 2014 Daniel Norton d/b/a WeirdoSoft - www.weirdosoft.com
+ *
+ * @section License
+ *    - <b>CC BY-SA 3.0</b> -
+ *   This work is licensed under the Creative Commons
+ *   Attribution-ShareAlike 3.0 Unported License. To view a copy of
+ *   this license, visit http://creativecommons.org/licenses/by-sa/3.0/
+ *   or send a letter to Creative Commons, 444 Castro Street, Suite 900,
+ *   Mountain View, California, 94041, USA.
+ * @}
+ *
  */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
@@ -16,34 +29,40 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  */
 class ApiShortUrl extends ApiBase {
 
-  /** Our API version */
-  const VERSION = MW_EXT_SHORTURLAPI_VERSION ;
+	/** Our API version */
+	const VERSION = MW_EXT_SHORTURLAPI_VERSION ;
 
-  /** name of 'codes' query parameter (without the MID) */
-  const PARAM_CODES = 'codes' ;
+	/** module ID ( short 2- or 3-letter code ) */
+	const MID = MW_EXT_SHORTURLAPI_API_MID ;
+	
+	/** query parameter name */
+	const PARAM_NAME = MW_EXT_SHORTURLAPI_PARAM_NAME ;
 
-  /** For parameters and semantics, see ApiBase::__construct */
+	/** name of 'codes' query parameter ( without the MID ) */
+	const PARAM_CODES = 'codes' ;
+	
+	/** For parameters and semantics, see ApiBase::__construct */
 	public function __construct( $query, $moduleName ) {
-    
-    // spit out a warning if the ShortUrl extension is not active
-    if ( self::$_allowMissingShortUrlExtensionNotice &&
-        !array_key_exists( 'ShortUrl', $GLOBALS['wgSpecialPages'] ) ) {
+		
+		// spit out a warning if the ShortUrl extension is not active
+		if ( self::$_allowMissingShortUrlExtensionNotice &&
+				!array_key_exists( 'ShortUrl', $GLOBALS['wgSpecialPages'] ) ) {
 
-      // only do this once (per load)
-      self::$_allowMissingShortUrlExtensionNotice = false ;
+			// only do this once ( per load )
+			self::$_allowMissingShortUrlExtensionNotice = false ;
 
-      // spit out the warning
-      trigger_error(
-        'The ShortUrl API was referenced, but the ShortUrl extension is not active.',
-        E_USER_NOTICE ) ;
-      
-    }
-    
-    $this->_moduleName = $moduleName ;  // save this for later
-		parent::__construct( $query, $moduleName, MW_EXT_SHORTURLAPI_API_MID ) ;
+			// spit out the warning
+			trigger_error(
+				'The ShortUrl API was referenced, but the ShortUrl extension is not active.',
+				E_USER_NOTICE ) ;
+			
+		}
+		
+		$this->_moduleName = $moduleName ;  // save this for later
+		parent::__construct( $query, $moduleName, self::MID ) ;
 	}
 
-  /** For parameters and semantics, see ApiBase::execute */
+	/** For parameters and semantics, see ApiBase::execute */
 	public function execute() {
 
 		// create the results array
@@ -55,24 +74,24 @@ class ApiShortUrl extends ApiBase {
 		$result->addValue( null, $this->_moduleName, array ( 'template' => self::getPathTemplate() ) ) ;
 
 		// get the list of pipe-separated ShortUrl codes
-    $codesString =
-      $this->getMain()->getVal( MW_EXT_SHORTURLAPI_API_MID . self::PARAM_CODES ) ;
- 
-    // if no codes, we're done
+		$codesString =
+			$this->getMain()->getVal( self::MID . self::PARAM_CODES ) ;
+
+		// if no codes, we're done
 		if ( !count( $codesString ) ) {
 			return ;
 		}
 
-    // convert the codes to lower case and split them up
+		// convert the codes to lower case and split them up
 		$codes = explode( '|', strtolower( $codesString ) ) ;
-    
+		
 		// remove duplicate codes
 		$codes = array_keys( array_flip( $codes ) ) ;
 
 		// convert codes to ids
 		$codes = array_map( 'ApiShortUrl::idFromCode', $codes ) ;
 
-    // fetch from the DB and iterate over the results
+		// fetch from the DB and iterate over the results
 		foreach ( $this->_queryDB( $codes ) as $row ) {
 			if ( $row->page_id ) {		// only report shorturl entries that are not orphaned
 				$shorturls[] =
@@ -83,115 +102,115 @@ class ApiShortUrl extends ApiBase {
 					) ;
 			}
 		}
-    
-    // give a name to the elements of our array, for XML
+		
+		// give a name to the elements of our array, for XML
 		$result->setIndexedTagName( $shorturls , 'codes_element' ) ;
 
-    // add the result
+		// add the result
 		$result->addValue( null, $this->_moduleName, array( self::PARAM_CODES => $shorturls, ) ) ;
 	}
 
-  /** For parameters and semantics, see ApiBase::getAllowedParams */
-  public function getAllowedParams() {
-    return array(
+	/** For parameters and semantics, see ApiBase::getAllowedParams */
+	public function getAllowedParams() {
+		return array(
 			self::PARAM_CODES => array(
-        ApiBase::PARAM_TYPE => 'string',
+				ApiBase::PARAM_TYPE => 'string',
 			),
 		) ;
-  }
+	}
 
-  /** For parameters and semantics, see ApiBase::getParamDescription */
+	/** For parameters and semantics, see ApiBase::getParamDescription */
 	public function getParamDescription() {
 		return array(
 			self::PARAM_CODES => 'Pipe-separated list of Short URL codes ( e.g. 1|6|1094|794sa ).',
 		) ;
 	}
 
-  /** For parameters and semantics, see ApiBase::getDescription */
+	/** For parameters and semantics, see ApiBase::getDescription */
 	public function getDescription() {
 		return 'This API fetches information about short URLs.' ;
 	}
 
-  /** For parameters and semantics, see ApiBase::getExamples */
+	/** For parameters and semantics, see ApiBase::getExamples */
 	public function getExamples() {
 		return array(
-      'api.php?action=' . MW_EXT_SHORTURLAPI_PARAM_NAME . '&' .
-            MW_EXT_SHORTURLAPI_API_MID . self::PARAM_CODES .
-            '=1|6|1094|794sa' =>
+			'api.php?action=' . self::PARAM_NAME . '&' .
+						self::MID . self::PARAM_CODES .
+						'=1|6|1094|794sa' =>
 				'Fetch information about short URLs with codes "1", "6", "1094" and "794sa"',
-			'api.php?action=' . MW_EXT_SHORTURLAPI_PARAM_NAME =>
+			'api.php?action=' . self::PARAM_NAME =>
 				'Fetch basic information about short URL configuration',
 		) ;
 	}
-  
-  /** Get the namespace text from the namespace id number. */
+	
+	/** Get the namespace text from the namespace id number. */
 	public static function getNamespaceText( $index ) {
-    if ( !$index ) {
-      return "";   // there is no namespace
-    }
-    
-    // first, try for the canonical name
-    $text = MWNamespace::getCanonicalName( $index );
+		if ( !$index ) {
+			return "";   // there is no namespace
+		}
+		
+		// first, try for the canonical name
+		$text = MWNamespace::getCanonicalName( $index ) ;
 
-    // next, try for a custom name
-    if ( !$text ) {
-      if ( array_key_exists( $index, $wgExtraNamespaces ) ) {
-        $text = $wgExtraNamespaces[$index];
-      }
-      
-      // if the namespace isn't defined, just fabricate one with its id number
-      if ( !$text ) {
-        $text = "UNDEFINED_NS_$index";
-      }
-      
-    }
-    return "$text:";
+		// next, try for a custom name
+		if ( !$text ) {
+			if ( array_key_exists( $index, $wgExtraNamespaces ) ) {
+				$text = $wgExtraNamespaces[$index] ;
+			}
+			
+			// if the namespace isn't defined, just fabricate one with its id number
+			if ( !$text ) {
+				$text = "UNDEFINED_NS_$index" ;
+			}
+			
+		}
+		return "$text:" ;
 	}
 
-  /** create the template for the short URL path */
-  public static function getPathTemplate() {
+	/** create the template for the short URL path */
+	public static function getPathTemplate() {
 		global $wgShortUrlTemplate, $wgCanonicalNamespaceNames, $wgArticlePath ;
- 
-    // use the configured template, if specified
+
+		// use the configured template, if specified
 		if ( $wgShortUrlTemplate ) {
 			$pathTemplate = $wgShortUrlTemplate ;
 		} else {
-      $titleText = $wgCanonicalNamespaceNames[NS_SPECIAL] . ':' .
-        SpecialPage::getTitleFor( 'ShortUrl', '$1' )->mUrlform ;
+			$titleText = $wgCanonicalNamespaceNames[NS_SPECIAL] . ':' .
+				SpecialPage::getTitleFor( 'ShortUrl', '$1' )->mUrlform ;
 			$pathTemplate = preg_replace( '/^(.*)$/', $wgArticlePath, $titleText ) ;
 		}
-    return $pathTemplate ;
-  }
+		return $pathTemplate ;
+	}
 
-  /**
-   * Get a ShortUrl code from its ShortUrl numeric ID
-   *
-   * @param   int    the ShortUrl numeric ID (su_id)
-   * @returns        string that contains the ShortUrl code
-   */
-  public static function codeFromId( $id ) {
+	/**
+	 * Get a ShortUrl code from its ShortUrl numeric ID
+	 *
+	 * @param   int    $id the ShortUrl numeric ID ( su_id )
+	 * @returns        string that contains the ShortUrl code
+	 */
+	public static function codeFromId( $id ) {
 	  return base_convert( $id, 10, 36 ) ;
-  }
+	}
 
-  /**
-   * Get a ShortUrl numeric ID from its ShortUrl code
-   *
-   * @param   string the ShortUrl code to convert
-   * @returns        int that contains the ShortUrl numeric ID (su_id)
-   */
-  public static function idFromCode( $code ) {
+	/**
+	 * Get a ShortUrl numeric ID from its ShortUrl code
+	 *
+	 * @param   string $code the ShortUrl code to convert
+	 * @returns        int that contains the ShortUrl numeric ID ( su_id )
+	 */
+	public static function idFromCode( $code ) {
 	  return base_convert( $code, 36, 10 ) ;
-  }
+	}
 
-  /**
-   * Query the ShortUrl database for details about specified ShortUrl codes
-   */
-  private function _queryDB( $codes ) {
+	/**
+	 * Query the ShortUrl database for details about specified ShortUrl codes
+	 */
+	private function _queryDB( $codes ) {
 		// build the DB query
 		$dbTables = array( 'shorturls', 'page' ) ;
 		$dbFields = array( 'su_id', 'page_id', 'page_title', 'page_namespace' ) ;
 		$dbConds  = array( 'su_id' => $codes ) ;
-    $dbOptions = array() ;
+		$dbOptions = array() ;
 		$dbJoinConds = array( 'page' => array(
 			'LEFT OUTER JOIN',
 			array(
@@ -201,22 +220,23 @@ class ApiShortUrl extends ApiBase {
 		) ) ;
 
 		// fetch the select query result from the DB and return it
-    return $this->getDB()->select(
-      $dbTables,
-      $dbFields,
-      $dbConds,
-      __METHOD__,
-      $dbOptions,
-      $dbJoinConds
-    ) ;
+		return $this->getDB()->select(
+			$dbTables,
+			$dbFields,
+			$dbConds,
+			__METHOD__,
+			$dbOptions,
+			$dbJoinConds
+		) ;
 
-  }
+	}
 
-  /** the name of our module, as provided to our constructor */
-  private $_moduleName ;
+	/** the name of our module, as provided to our constructor */
+	private $_moduleName ;
 
-  /** flag to prevent repeat warnings of missing ShortUrl extension during the same request */
-  private static $_allowMissingShortUrlExtensionNotice = true ;
+	/** flag to prevent repeat warnings of missing ShortUrl extension during the same request */
+	private static $_allowMissingShortUrlExtensionNotice = true ;
 
 }
 
+/** @}*/

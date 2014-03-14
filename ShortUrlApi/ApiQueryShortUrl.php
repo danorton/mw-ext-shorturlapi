@@ -1,9 +1,22 @@
 <?php
 /**
- * @file
  * @ingroup Extensions
- * @author Daniel Norton
- * @copyright © 2014 Daniel Norton
+ * @{
+ * ApiQueryShortUrl Class
+ *
+ * @file
+ * @{
+ * @copyright © 2014 Daniel Norton d/b/a WeirdoSoft - www.weirdosoft.com
+ *
+ * @section License
+ *    - <b>CC BY-SA 3.0</b> -
+ *   This work is licensed under the Creative Commons
+ *   Attribution-ShareAlike 3.0 Unported License. To view a copy of
+ *   this license, visit http://creativecommons.org/licenses/by-sa/3.0/
+ *   or send a letter to Creative Commons, 444 Castro Street, Suite 900,
+ *   Mountain View, California, 94041, USA.
+ * @}
+ *
  */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
@@ -17,41 +30,44 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  */
 class ApiQueryShortUrl extends ApiQueryBase {
 
-  /** Our API version */
-  const VERSION = MW_EXT_SHORTURLAPI_VERSION ;
+	/** Our API version */
+	const VERSION = MW_EXT_SHORTURLAPI_VERSION ;
 
+	/** module ID ( short 2- or 3-letter code ), without the trailing 'q' */
+	const MID = MW_EXT_SHORTURLAPI_API_MID ;
+	
 	/** Limit the number of pages we’ll query in a single invocation.
 	 * We impose this limit because we're doing an outer join, which
 	 * can become expensive for large sets.
 	 */
 	const MAX_PAGES = 100 ;
 
-  /** For parameters and semantics, see ApiQueryBase::__construct(). */
+	/** For parameters and semantics, see ApiQueryBase::__construct(). */
 	public function __construct( $query, $moduleName ) {
-		parent::__construct( $query, $moduleName, MW_EXT_SHORTURLAPI_API_MID . 'q' ) ;
+		parent::__construct( $query, $moduleName, self::MID . 'q' ) ;
 	}
 
-  /** For parameters and semantics, see ApiQueryBase::execute(). */
+	/** For parameters and semantics, see ApiQueryBase::execute(). */
 	public function execute() {
 		$params = $this->extractRequestParams() ;
 		$this->_executeQuery( $params ) ;
 	}
 
-  /** For parameters and semantics, see ApiQueryBase::getAllowedParams(). */
-  public function getAllowedParams() {
-    return array(
-      'prop' => array(
-        ApiBase::PARAM_DFLT => 'path',
-        ApiBase::PARAM_ISMULTI => true,
-        ApiBase::PARAM_TYPE => array(
-          'code',
-          'path',
-        ) ),
-      'continue' => null,
-    ) ;
-  }
+	/** For parameters and semantics, see ApiQueryBase::getAllowedParams(). */
+	public function getAllowedParams() {
+		return array(
+			'prop' => array(
+				ApiBase::PARAM_DFLT => 'path',
+				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_TYPE => array(
+					'code',
+					'path',
+				) ),
+			'continue' => null,
+		) ;
+	}
 
-  /** For parameters and semantics, see ApiQueryBase::getParamDescription(). */
+	/** For parameters and semantics, see ApiQueryBase::getParamDescription(). */
 	public function getParamDescription() {
 		return array( array_merge( parent::getParamDescription(), array(
 			'code' => 'Include the short URL code with the properties of a page',
@@ -59,12 +75,12 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		) ) ) ;
 	}
 
-  /** For parameters and semantics, see ApiQueryBase::getDescription(). */
+	/** For parameters and semantics, see ApiQueryBase::getDescription(). */
 	public function getDescription() {
 		return 'This API extension adds a short URL (shorturl) property to the query action.' ;
 	}
 
-  /** For parameters and semantics, see ApiQueryBase::getExamples(). */
+	/** For parameters and semantics, see ApiQueryBase::getExamples(). */
 	public function getExamples() {
 		return array(
 
@@ -77,12 +93,12 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		) ;
 	}
 
-  /**
-   * Perform our part of the query.
-   *
-   * @param[in] array  $params array of parameters (e.g. from ApiBase::extractRequestParams)
-   * @returns   array
-   */
+	/**
+	 * Perform our part of the query.
+	 *
+	 * @param[in] array  $params array of parameters ( e.g. from ApiBase::extractRequestParams )
+	 * @returns   array
+	 */
 	private function _executeQuery( $params ) {
 		// Only operate on existing pages
 		$pageids = array_keys( $this->getPageSet()->getGoodTitles() ) ;
@@ -114,27 +130,27 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		$fieldCode = isset( $prop['code'] ) ;
 		$fieldPath = isset( $prop['path'] ) ;
 
-    // fetch the path template now if we'll need it while iterating
-    if ( $fieldPath ) {
-      $pathTemplate = ApiShortUrl::getPathTemplate();
-    }
-    
+		// fetch the path template now if we'll need it while iterating
+		if ( $fieldPath ) {
+			$pathTemplate = ApiShortUrl::getPathTemplate() ;
+		}
+		
 		$result = $this->getResult() ;
 
-    // fetch and iterate over the results from the DB
+		// fetch and iterate over the results from the DB
 		foreach ( $this->_queryDB( $pageids ) as $row ) {
 
-      // convert the ShortUrl ID to its base-36 code
+			// convert the ShortUrl ID to its base-36 code
 			$code = ApiShortUrl::codeFromId( $row->su_id ) ;
 
-      // code requested?
+			// code requested?
 			if ( $fieldCode ) {
 				$result->addValue( array( 'query', 'pages', $row->page_id, ),
 					'shorturl', array( 'code' => $code, )
 				) ;
 			}
 
-      // path requested?
+			// path requested?
 			if ( $fieldPath ) {
 				$result->addValue( array( 'query', 'pages', $row->page_id, ),
 					'shorturl', array( 'path' => preg_replace( '/^(.*)$/', $pathTemplate, $code ) )
@@ -144,10 +160,10 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		}
 	}
 
-  /**
-   * Perform the DB query
-   */
-  private function _queryDB( $pageids ) {
+	/**
+	 * Perform the DB query
+	 */
+	private function _queryDB( $pageids ) {
 		$this->resetQueryParams() ;
 		$this->addTables( array( 'page', 'shorturls' ) ) ;
 		$this->addFields( array( 'page_id', 'su_id', ) ) ;
@@ -159,6 +175,8 @@ class ApiQueryShortUrl extends ApiQueryBase {
 			),
 		) ) ) ;
 		return $this->select( __METHOD__ ) ;
-  }
-  
+	}
+	
 }
+
+/** @}*/
