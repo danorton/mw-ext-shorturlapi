@@ -100,18 +100,16 @@ class ApiShortUrl extends ApiBase {
 		// fetch from the DB and iterate over the results
 		foreach ( $this->_queryDB( $codes ) as $row ) {
 			if ( $row->page_id ) {		// only report shorturl entries that are not orphaned
-				$shorturls[] =
+				$code = $row->su_id ;
+				$shorturls["code_$code"] =
 					array(
-						'code'    => self::codeFromId( $row->su_id ),
+						'code'    => $code,
 						'pageid'  => $row->page_id,
 						'title'   => self::getNamespaceText( $row->page_namespace ) . $row->page_title,
 					) ;
 			}
 		}
 		
-		// give a name to the elements of our array, for XML
-		$result->setIndexedTagName( $shorturls , 'codes_element' ) ;
-
 		// add the result
 		$result->addValue( null, $this->_moduleName, array( self::PARAM_CODES => $shorturls, ) ) ;
 	}
@@ -140,7 +138,7 @@ class ApiShortUrl extends ApiBase {
 		return array(
 			'Returns information about short URLs provided by the ShortUrl extension.',
 			'  template: string formatting template for URL paths.',
-			'  codes: list of information for each code requested.',
+			'  codes: list of each code and its related information.',
 		);
 	}
 
