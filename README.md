@@ -1,8 +1,8 @@
-wm-ext-shorturlapi
+mw-ext-shorturlapi
 ==================
 
-Wrapper repo Wikimedia Extension ApiShortUrl - an API extension for the Wikimedia ShortUrl extension
+This is a repo wrapper for the MediaWiki ShortUrlApi extension.
 
 Documentation is at http://danorton.github.io/wikimedia/mediawiki/extensions/ShortUrlApi/dox/
 
-**This README is not part of the extension, but only the repo wrapper.**
+**The MediaWiki ShortUrlApi extension is entirely contained inside the ShortUrlApi folder.**
