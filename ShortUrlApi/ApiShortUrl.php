@@ -128,13 +128,16 @@ class ApiShortUrl extends ApiBase {
 	/** For parameters and semantics, see ApiBase::getParamDescription */
 	public function getParamDescription() {
 		return array(
-			self::PARAM_CODES => 'Pipe-separated list of Short URL codes ( e.g. 1|6|1094|794sa ).',
+			self::PARAM_CODES => array(
+				'List of Short URL codes.',
+				'Separate values with "|". ( e.g. 1|6|1094|794sa ).',
+				)
 		) ;
 	}
 
 	/** For parameters and semantics, see ApiBase::getDescription */
 	public function getDescription() {
-		return 'This API fetches information about short URLs.' ;
+		return 'Returns information about short URLs provided by the ShortUrl extension.' ;
 	}
 
 	/** For parameters and semantics, see ApiBase::getExamples */

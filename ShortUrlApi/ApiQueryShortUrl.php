@@ -72,18 +72,32 @@ class ApiQueryShortUrl extends ApiQueryBase {
 			'continue' => null,
 		) ;
 	}
+	
+	/**
+	 * Returns the descriptions for the properties provided by getPropertyNames()
+	 *
+	 * @param string $mid Module ID
+	 * @return array
+	 */
+	public static function getPropertyDescriptions( $mid = '' ) {
+		return array_merge(
+			array( 'ShortUrl information to get:' ),
+			self::_getProperties( $mid )
+		);
+	}
 
 	/** For parameters and semantics, see ApiQueryBase::getParamDescription(). */
 	public function getParamDescription() {
-		return array( array_merge( parent::getParamDescription(), array(
-			'code' => 'Include the short URL code with the properties of a page',
-			'path' => 'Include the URL path with the properties of a page',
-		) ) ) ;
+		$mid = $this->getModulePrefix();
+		return array(
+			'prop' => self::getPropertyDescriptions( $mid ),
+			'continue' => 'When more results are available, use this to continue.',
+		) ;
 	}
 
 	/** For parameters and semantics, see ApiQueryBase::getDescription(). */
 	public function getDescription() {
-		return 'This API extension adds a short URL (shorturl) property to the query action.' ;
+		return 'Returns information about short URLs provided by the ShortUrl extension.' ;
 	}
 
 	/** For parameters and semantics, see ApiQueryBase::getExamples(). */
@@ -100,6 +114,19 @@ class ApiQueryShortUrl extends ApiQueryBase {
 	}
 
 	/**
+	 * Returns array key value pairs of properties and their descriptions
+	 *
+	 * @param   string $mid Module ID
+	 * @return  array of property keys with descriptions
+	 */
+	private static function _getProperties( $mid = '' ) {
+		return array(
+			'code' => '  code - ShortUrl code (e.g. "q45t")',
+			'path' => '  path - ShortUrl path (e.g. "/Special:ShortUrl/q45t")',
+		);
+	}
+
+	/**
 	 * Perform our part of the query.
 	 *
 	 * @param[in] array  $params array of parameters ( e.g. from ApiBase::extractRequestParams )
@@ -112,7 +139,7 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		// Filter out already-processed pages
 		if ( array_key_exists( 'continue', $params ) && ( $params['continue'] !== null ) ) {
 			$cont = explode( '|', $params['continue'] ) ;
-			$this->dieContinueUsageIf( count( $cont ) != 2 ) ;
+			$this->dieContinueUsageIf( count( $cont ) != 1 ) ;
 			$contPage = (int)$cont[0] ;
 			$pageids = array_filter( $pageids, function ( $v ) use ( $contPage ) {
 				return $v >= $contPage ;
@@ -127,7 +154,7 @@ class ApiQueryShortUrl extends ApiQueryBase {
 		sort( $pageids ) ;
 		$continuePages = null ;
 		if ( count( $pageids ) > self::MAX_PAGES ) {
-			$continuePages = $pageids[self::MAX_PAGES] . '|0' ;
+			$continuePages = $pageids[self::MAX_PAGES] ;
 			$pageids = array_slice( $pageids, 0, self::MAX_PAGES ) ;
 		}
 
@@ -164,6 +191,12 @@ class ApiQueryShortUrl extends ApiQueryBase {
 			}
 
 		}
+		
+		// if we exceeded MAX_PAGES, return the continue value
+		if ( $continuePages !== null ) {
+			$this->setContinueEnumParameter( 'continue', $continuePages );
+		}
+
 	}
 
 	/**
