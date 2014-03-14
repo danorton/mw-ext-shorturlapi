@@ -104,6 +104,14 @@ class ApiShortUrl extends ApiBase {
 						'pageid'  => $row->page_id,
 						'title'   => self::getNamespaceText( $row->page_namespace ) . $row->page_title,
 					) ;
+			} elseif ( self::$_needToWarnAboutOrphanURLs ) {
+			  // only do this once ( per load )
+				self::$_needToWarnAboutOrphanURLs = false ;
+				
+				trigger_error(
+					'The ShortUrl DB table has orphan references.',
+					E_USER_NOTICE ) ;
+
 			}
 		}
 		
@@ -250,6 +258,9 @@ class ApiShortUrl extends ApiBase {
 
 	/** flag to prevent repeat warnings of missing ShortUrl extension during the same request */
 	private static $_allowMissingShortUrlExtensionNotice = true ;
+
+	/** flag to prevent repeat warnings of orphan short URLs */
+	private static $_needToWarnAboutOrphanURLs = true ;
 
 }
 
