@@ -37,7 +37,7 @@ if ( defined( 'MW_EXT_SHORTURLAPI_NAME' ) ) {
 }
 
 define( 'MW_EXT_SHORTURLAPI_NAME',            'ShortUrlApi' ) ;
-define( 'MW_EXT_SHORTURLAPI_VERSION',         '1.0.0' ) ;
+define( 'MW_EXT_SHORTURLAPI_VERSION',         '1.0.2' ) ;
 define( 'MW_EXT_SHORTURLAPI_AUTHOR',          'Daniel Norton' ) ;
 
 define( 'MW_EXT_SHORTURLAPI_PARAM_NAME',      'shorturl' ) ;

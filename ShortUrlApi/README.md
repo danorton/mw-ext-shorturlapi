@@ -46,5 +46,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Releases
- - **PENDING** 1.0.2-alpha - bug fixes, documentation enhancements
+ - **PENDING** 1.0.2-alpha - bug fixes, enhancements
+   - Enhancements:
+     - #5 - with action=shorturl, return codes as associative array
+     - #3 - added details to auto-generated API help page
+   - Bug fixes:
+     - #2 - Fixed bug with page query continuation
+
  - 1.0.1-alpha - Initial release
