@@ -1,7 +1,7 @@
 # MediaWiki ShortUrlApi extension
-=================================
 © 2014 Daniel Norton d/b/a WeirdoSoft - www.weirdosoft.com
----
+
+This is a MediaWiki extension that provides an API for the ShortUrl extension.
 
 ## Documentation
 The latest API documentation is at http://danorton.github.io/wikimedia/extensions/ShortUrlApi/dox/
