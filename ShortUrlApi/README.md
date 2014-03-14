@@ -36,4 +36,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Releases
 
- - **PENDING** 1.0.1-alpha - Initial release
+ - 1.0.1-alpha - Initial release
