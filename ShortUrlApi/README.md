@@ -2,22 +2,32 @@
 © 2014 Daniel Norton d/b/a WeirdoSoft - www.weirdosoft.com
 
 This is a MediaWiki extension that provides an API for the ShortUrl extension.
+It adds:
+ - A new property to page queries (action=query&prop=shorturl):
+   - path: ShortUrl path
+   - code: ShortUrl code
 
-## Documentation
-The latest API documentation is at
-http://danorton.github.io/wikimedia/mediawiki/extensions/ShortUrlApi/dox/
+ - A new query action (action=shorturl), which returns details about specified short URL codes.
+   - template: a string formatting template for ShortUrl paths
+   - an array of details for each code specified in the query
 
 ## Installation
-
 1. Review http://www.mediawiki.org/wiki/Manual:Extensions
 2. Review http://www.mediawiki.org/wiki/Extension:ShortUrl
 3. Confirm that the ShortUrl extension is installed. (See #1 & #2)
 4. Install this ShortUrlApi extension. (See #1.)
 
 ## Configuration
-
 1. There is no configuration for this extension.
 2. There is no #2.
+
+## Documentation
+For API usage, see the self-documenting API home page, available
+after installation on the target wiki.
+e.g. http://en.wikipedia.org/w/api.php
+
+The latest internal source documentation is at
+http://danorton.github.io/wikimedia/mediawiki/extensions/ShortUrlApi/dox/
 
 ## License
 **GPL v3**
@@ -36,5 +46,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Releases
-
+ - **PENDING** 1.0.2-alpha - bug fixes, documentation enhancements
  - 1.0.1-alpha - Initial release

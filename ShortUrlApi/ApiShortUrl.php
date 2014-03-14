@@ -137,7 +137,11 @@ class ApiShortUrl extends ApiBase {
 
 	/** For parameters and semantics, see ApiBase::getDescription */
 	public function getDescription() {
-		return 'Returns information about short URLs provided by the ShortUrl extension.' ;
+		return array(
+			'Returns information about short URLs provided by the ShortUrl extension.',
+			'  template: string formatting template for URL paths.',
+			'  codes: list of information for each code requested.',
+		);
 	}
 
 	/** For parameters and semantics, see ApiBase::getExamples */
