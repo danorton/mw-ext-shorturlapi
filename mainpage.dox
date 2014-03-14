@@ -1,9 +1,10 @@
 /**
  * @mainpage
  *
- * This is a repo wrapper for the MediaWiki @ref ShortUrlApi extension.
+ * This is a repo wrapper for the MediaWiki @ref ShortUrlApi extension internal
+ * source code documentation.
  *
- * This source is available at <a href="https://github.com/danorton/mw-ext-shorturlapi.git">GitHub</a>.
+ * The source is available at <a href="https://github.com/danorton/mw-ext-shorturlapi.git">GitHub</a>.
  * To fetch it using git:
  * @code
  * git clone 'https://github.com/danorton/mw-ext-shorturlapi.git'
