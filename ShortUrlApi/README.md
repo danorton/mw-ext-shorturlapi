@@ -12,10 +12,11 @@ It adds:
    - an array of details for each code specified in the query
 
 ## Installation
-1. Review http://www.mediawiki.org/wiki/Manual:Extensions
-2. Review http://www.mediawiki.org/wiki/Extension:ShortUrl
-3. Confirm that the ShortUrl extension is installed. (See #1 & #2)
+1. Review installation instructions at http://www.mediawiki.org/wiki/Manual:Extensions.
+2. Review ShortUrl installation instructions at http://www.mediawiki.org/wiki/Extension:ShortUrl.
+3. Confirm that the ShortUrl extension is installed. (See #1 & #2.)
 4. Install this ShortUrlApi extension. (See #1.)
+5. Confirm installation at Special:Version.
 
 ## Configuration
 1. There is no configuration for this extension.
