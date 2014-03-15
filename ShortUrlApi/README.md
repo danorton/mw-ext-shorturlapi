@@ -4,16 +4,16 @@
 This is a MediaWiki extension that provides an API for the ShortUrl extension.
 It adds:
  - A new property to page queries (action=query&prop=shorturl):
-   - path: ShortUrl path
-   - code: ShortUrl code
+   - path: ShortUrl path (e.g. "/Special:ShortUrl/q45t")
+   - code: ShortUrl code (e.g. "q45t")
 
- - A new query action (action=shorturl), which returns details about specified short URL codes.
-   - template: a string formatting template for ShortUrl paths
+ - A new query action (action=shorturl), which returns details about specified short URL codes:
+   - template: a string formatting template for ShortUrl paths (e.g. "/Special:ShortUrl/$1")
    - an array of details for each code specified in the query
 
 ## Installation
-1. Review installation instructions at http://www.mediawiki.org/wiki/Manual:Extensions.
-2. Review ShortUrl installation instructions at http://www.mediawiki.org/wiki/Extension:ShortUrl.
+1. Review installation instructions at https://www.mediawiki.org/wiki/Manual:Extensions.
+2. Review ShortUrl installation instructions at https://www.mediawiki.org/wiki/Extension:ShortUrl.
 3. Confirm that the ShortUrl extension is installed. (See #1 & #2.)
 4. Install this ShortUrlApi extension. (See #1.)
 5. Confirm installation at Special:Version.
@@ -25,10 +25,10 @@ It adds:
 ## Documentation
 For API usage, see the self-documenting API home page, available
 after installation on the target wiki.
-e.g. http://en.wikipedia.org/w/api.php
+e.g. https://en.wikipedia.org/w/api.php
 
 The latest internal source documentation is at
-http://danorton.github.io/wikimedia/mediawiki/extensions/ShortUrlApi/dox/
+https://danorton.github.io/wikimedia/mediawiki/extensions/ShortUrlApi/dox/
 
 ## License
 **GPL v3**
@@ -44,9 +44,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Releases
+ - **PENDING** 1.0.3-alpha - Initial verion to Gerrit
  - 1.0.2-alpha - bug fixes, enhancements
    - Enhancements:
      - #5 - with action=shorturl, return codes as associative array

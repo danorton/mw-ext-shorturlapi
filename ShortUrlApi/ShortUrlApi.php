@@ -21,7 +21,7 @@
  * GNU General Public License for more details.
  * \n\n
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * @}
  *
  */
@@ -54,8 +54,8 @@ $wgExtensionCredits['api'][] = array(
 	'description'  => 'Provide information about MediaWiki ShortUrl objects.',
 	'version'      => MW_EXT_SHORTURLAPI_VERSION,
 	'author'       => MW_EXT_SHORTURLAPI_AUTHOR,
-	'license-name' => '[http://www.gnu.org/licenses/gpl-3.0.txt GPL v3]',
-	'url'          => 'http://www.wikimedia.org/wiki/API:ShortUrl',
+	'license-name' => '[https://www.gnu.org/licenses/gpl-3.0.txt GPL v3]',
+	'url'          => 'https://www.mediawiki.org/wiki/Extension:ShortUrlApi',
 ) ;
 
 // API declarations
