@@ -99,11 +99,14 @@ class ApiShortUrl extends ApiBase {
 		foreach ( $this->_queryDB( $codes ) as $row ) {
 			if ( $row->page_id ) {		// only report shorturl entries that are not orphaned
 				$code = ApiShortUrl::codeFromId( $row->su_id );
+				$title = self::getNamespaceText( $row->page_namespace ) . $row->page_title;
+				global $wgArticlePath;
 				$shorturls["code_$code"] =
 					array(
 						'code'    => $code,
 						'pageid'  => $row->page_id,
-						'title'   => self::getNamespaceText( $row->page_namespace ) . $row->page_title,
+						'title'   => str_replace( '_', ' ', $title ),
+						'longpath'=> preg_replace( '/^(.*)$/', $wgArticlePath, $title ),
 					);
 			} elseif ( self::$_needToWarnAboutOrphanURLs ) {
 			  // only do this once ( per load )
