@@ -224,9 +224,9 @@ class ApiShortUrl extends ApiBase {
 
 	/**
 	 * Query the ShortUrl database for details about specified ShortUrl codes
-   *
-   * @param   array short URL codes to query
-   * @returns       ResultWrapper|bool returns result or @c false on error.
+	 *
+	 * @param   array short URL codes to query
+	 * @returns       ResultWrapper|bool returns result or @c false on error.
 	 */
 	private function _queryDB( $codes ) {
 		// convert codes to ids (this also scrubs the input)
